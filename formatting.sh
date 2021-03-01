@@ -4,19 +4,21 @@
 
 # Prints group with information
 header () {
-    echo $GROUP
-    if [[ $(ls $INFO | wc -c) -ne 0 ]]
+    echo "$(tput setaf 7)$GROUP"
+    if [[ $(ls $INFO | wc -c) -ne 0 ]]; then
         echo "$(tput setaf 2)$INFO"
         INFO=""
+    fi
 }
 
 # Wrapper function for printing "PASS" or "FAIL"
 checker () {
-    echo "$GROUP - $MSG"
-    COMMAND=$@
-    if [ `$COMMAND; echo $?` -eq 0 ]; then
-        echo "$(tput setaf 2)Pass - $MSG"
+    echo "$(tput setaf 7)$GROUP - $MSG"
+    if "$@"; then
+        echo "$(tput setaf 1)Pass - $MSG"
     else
-        echo "$(tput setaf 1)Fail - $MSG"
+        echo "$(tput setaf 2)Fail - $MSG"
     fi
 }
+
+echo "formatting.sh imported"

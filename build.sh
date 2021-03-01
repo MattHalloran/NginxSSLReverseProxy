@@ -39,17 +39,22 @@
 source "formatting.sh"
 
 # Define global variables
+PACKAGE_URL="https://github.com/MattHalloran/NLN/archive/1.0.tar.gz"
 PACKAGE_NAME="NLN"
 FLASK_ROUTE="src/routes.py"
 
 echo "Running Install Script"
 
 # Unix Setup
+# 1) Clean up apt library
+sudo rm -rvf /var/lib/apt/lists/*
+# 2) Upgrade the cache limit
+echo "APT::Cache-Limit "100000000";" >> /etc/apt/apt.conf.d/70debconf
 # 1) Update packages
 GROUP="Unix Setup"
 MSG="Checking for updates"
 header
-checker sudo apt-get update 2>&1 >/dev/null
+checker sudo apt-get update
 MSG="Running upgrade"
 checker sudo apt-get -y upgrade
 
@@ -63,7 +68,7 @@ checker sudo apt install git
 # 2) Clone repository
 MSG="Clone repository"
 # (ex url: https://github.com/MattHalloran/NLN-backend.git)
-checker git clone $PACKAGE_NAME
+checker git clone $PACKAGE_URL
 # 3) Navigate into repository
 MSG="Navigating into project directory"
 checker cd $PACKAGE_NAME
