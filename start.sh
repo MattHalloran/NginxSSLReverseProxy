@@ -11,15 +11,15 @@
 # --------- React frontend ------------------
 # 1) 
 
+HERE=`dirname $0`
+source "$HERE/consts.sh"
 # Load functions to help with echo formatting
-source "formatting.sh"
-
-# Define global variables
-PACKAGE_NAME="NLN"
+source "$HERE/formatting.sh"
 
 # Start Task Queue
 GROUP="Task Queue Server"
 INFO="This uses Redis"
+header
 MSG="Navigating to / directory"
 checker cd
 MSG="Navigating to redis build directory"
@@ -29,12 +29,25 @@ checker src/redis-server
 
 # Start PostgreSQL
 # **NOTE: To start postgres on Mac, use "brew services start postgresql"
-service postgresql start
+GROUP="Start PostgreSQL"
+header
+MSG="Starting postgresql service"
+checker service postgresql start
 
 # Start Python backend
-cd "/$PACKAGE_NAME/backend"
-gunicorn -b :5000 src.routes:app
+GROUP="Start backend"
+header
+MSG="Activating python environment"
+cd
+cd "$PACKAGE_NAME/backend"
+chcker virtualenv site_env
+MSG="Starting server using gunicorn"
+checker gunicorn -b :5000 src.routes:app &
 
 # Start React frontend
-cd "/$PACKAGE_NAME/frontend"
-serve -s build -l 3000
+GROUP="Start frontend"
+header
+MSG="Serving production build"
+cd
+cd "$PACKAGE_NAME/frontend"
+checker serve -s build -l 3000 &

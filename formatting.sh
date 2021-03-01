@@ -13,7 +13,7 @@ header () {
 
 # Wrapper function for printing "PASS" or "FAIL"
 checker () {
-    echo "$(tput setaf 7)$GROUP - $MSG"
+    echo "$(tput setaf 7)$GROUP - $MSG..."
     if "$@"; then
         echo "$(tput setaf 2)Pass - $MSG"
     else
