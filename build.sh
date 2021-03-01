@@ -145,13 +145,12 @@ MSG="Installing postgresql and postgresql-contrib"
 checker sudo apt-get install postgresql postgresql-contrib
 # Make sure postgres server is running
 # **NOTE: To start postgres on Mac, use "brew services start postgresql"
-service postgresql start
+#service postgresql start
 # PostgreSQL comes with a postgres user. It is recommended to use a different user. So we will create a new one with the username and password in the config file
 # **NOTE: If postgres user was not created, enter "/usr/local/opt/postgres/bin/createuser -s postgres"
-sudo su postgress
 # On Mac, enter "psql -h localhost -d postgres"
-psql -c "CREATE USER $DB_USER WITH PASSWORD '$DB_PASSWORD';"
-psql -c "ALTER USER $DB_USER WITH SUPERUSER;"
+#sudo -u postgres "psql -c \"CREATE USER $DB_USER WITH PASSWORD '$DB_PASSWORD';\""
+#sudo -u postgres "psql -c \"ALTER USER $DB_USER WITH SUPERUSER;\""
 
 # 9) Create assets directories
 mkdir assets
@@ -160,7 +159,7 @@ mkdir assets/messaging
 mkdir assets/plant
 
 # 10) Setup database and populate with default data
-cd "/$PACKAGE_NAME/backend/tools"
+cd "~/$PACKAGE_NAME/backend/tools/"
 python3 dbTools.py
 
 # 11) Install npm
@@ -169,7 +168,7 @@ sudo apt install npm
 
 
 # 13) Install npm packages
-cd "/$PACKAGE_NAME/frontend"
+cd "~/$PACKAGE_NAME/frontend/"
 npm install
 
 # Create frontend production build

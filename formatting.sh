@@ -6,7 +6,7 @@
 header () {
     echo "$(tput setaf 7)$GROUP"
     if [[ $(ls $INFO | wc -c) -ne 0 ]]; then
-        echo "$(tput setaf 2)$INFO"
+        echo "$(tput setaf 3)$INFO"
         INFO=""
     fi
 }
