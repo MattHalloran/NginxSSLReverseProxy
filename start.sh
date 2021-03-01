@@ -37,4 +37,4 @@ gunicorn -b :5000 src.routes:app
 
 # Start React frontend
 cd "/$PACKAGE_NAME/frontend"
-serve -s build
+serve -s build -l 3000

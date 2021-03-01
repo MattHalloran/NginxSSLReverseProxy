@@ -58,20 +58,20 @@ header
 ENV_PATH = "/etc/environment"
 # Add the following to the file. Do not delete any of the existing lines
 read -p "Enter DB_PASSWORD: " DB_PASSWORD
-echo $DB_PASSWORD >> $ENV_PATH
+echo "DB_PASSWORD=$DB_PASSWORD" >> $ENV_PATH
 read -p "Enter NLN_SIGN_KEY: " NLN_SIGN_KEY
-echo $NLN_SIGN_KEY >> $ENV_PATH
+echo "NLN_SIGN_KEY=$NLN_SIGN_KEY" >> $ENV_PATH
 read -p "Enter TWILIO_ACCOUNT_SID: " TWILIO_ACCOUNT_SID
-echo $TWILIO_ACCOUNT_SID >> $ENV_PATH
+echo "TWILIO_ACCOUNT_SID=$TWILIO_ACCOUNT_SID" >> $ENV_PATH
 read -p "Enter TWILIO_AUTH_TOKEN: " TWILIO_AUTH_TOKEN
-echo $TWILIO_AUTH_TOKEN >> $ENV_PATH
+echo "TWILIO_AUTH_TOKEN=$TWILIO_AUTH_TOKEN" >> $ENV_PATH
 read -p "Enter AFA_EMAIL_USERNAME: " AFA_EMAIL_USERNAME
-echo $AFA_EMAIL_USERNAME >> $ENV_PATH
+echo "AFA_EMAIL_USERNAME=$AFA_EMAIL_USERNAME" >> $ENV_PATH
 read -p "Enter AFA_EMAIL_FROM: " AFA_EMAIL_FROM
-echo $AFA_EMAIL_FROM >> $ENV_PATH
+echo "AFA_EMAIL_FROM=$AFA_EMAIL_FROM" >> $ENV_PATH
 read -p "Enter AFA_EMAIL_PASSWORD: " AFA_EMAIL_PASSWORD
-echo $AFA_EMAIL_PASSWORD >> $ENV_PATH
-FLASK_APP=$FLASK_ROUTE
+echo "AFA_EMAIL_PASSWORD=$AFA_EMAIL_PASSWORD" >> $ENV_PATH
+echo "FLASK_APP=$FLASK_ROUTE" >> $ENV_PATH
 
 # Unix Setup
 # 1) Clean up apt library
@@ -141,6 +141,9 @@ pip3 install redis rq
 GROUP="PostgreSQL Setup"
 header
 # Download (on Mac use "brew install postgres" instead )
+# Remove existing postgres, if any
+MSG="Purging existing postgresql, if any"
+checker sudo apt-get --purge remove postgresql postgresql-contrib
 MSG="Installing postgresql and postgresql-contrib"
 checker sudo apt-get install postgresql postgresql-contrib
 # Make sure postgres server is running
@@ -152,15 +155,18 @@ checker sudo apt-get install postgresql postgresql-contrib
 #sudo -u postgres "psql -c \"CREATE USER $DB_USER WITH PASSWORD '$DB_PASSWORD';\""
 #sudo -u postgres "psql -c \"ALTER USER $DB_USER WITH SUPERUSER;\""
 
-# 9) Create assets directories
+# 9) Create backend assets directories
+cd
+cd "$PACKAGE_NAME/backend"
 mkdir assets
 mkdir assets/gallery
 mkdir assets/messaging
 mkdir assets/plant
 
 # 10) Setup database and populate with default data
-cd "~/$PACKAGE_NAME/backend/tools/"
-python3 dbTools.py
+#cd
+#cd "$PACKAGE_NAME/backend/tools/"
+#python3 dbTools.py
 
 # 11) Install npm
 sudo apt install nodejs
@@ -168,8 +174,11 @@ sudo apt install npm
 
 
 # 13) Install npm packages
-cd "~/$PACKAGE_NAME/frontend/"
+cd
+cd "$PACKAGE_NAME/frontend/"
 npm install
+# Fix vulnerabilities
+npm audit fix
 
 # Create frontend production build
 npm run build
