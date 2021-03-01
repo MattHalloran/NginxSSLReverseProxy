@@ -35,15 +35,17 @@
 # 12) Install npm packages
 # 13) Update max listeners
 
-# Load functions to help with echo formatting
-source "formatting.sh"
+echo "Running Install Script"
 
 # Define global variables
-PACKAGE_URL="https://github.com/MattHalloran/NLN/archive/1.0.tar.gz"
+HERE=`dirname $0`
+# (ex url: https://github.com/MattHalloran/NLN.git)
+PACKAGE_URL="https://github.com/MattHalloran/NLN.git"
 PACKAGE_NAME="NLN"
 FLASK_ROUTE="src/routes.py"
 
-echo "Running Install Script"
+# Load functions to help with echo formatting
+source "$HERE/formatting.sh"
 
 # Unix Setup
 # 1) Clean up apt library
@@ -67,7 +69,7 @@ MSG="Installing git"
 checker sudo apt install git
 # 2) Clone repository
 MSG="Clone repository"
-# (ex url: https://github.com/MattHalloran/NLN-backend.git)
+cd
 checker git clone $PACKAGE_URL
 # 3) Navigate into repository
 MSG="Navigating into project directory"

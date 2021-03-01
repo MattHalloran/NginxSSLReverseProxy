@@ -15,9 +15,9 @@ header () {
 checker () {
     echo "$(tput setaf 7)$GROUP - $MSG"
     if "$@"; then
-        echo "$(tput setaf 1)Pass - $MSG"
+        echo "$(tput setaf 2)Pass - $MSG"
     else
-        echo "$(tput setaf 2)Fail - $MSG"
+        echo "$(tput setaf 1)Fail - $MSG"
     fi
 }
 
