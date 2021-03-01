@@ -16,9 +16,9 @@
 # 1) Create redis directory
 # 2) Download redis release
 # 3) Install redis release
-# --------- PostgreSQL Setup ------------------
-# 1) 
 # --------- Environment Variables Setup ------------------
+# 1) 
+# --------- PostgreSQL Setup ------------------
 # 1) 
 # --------- Backend setup -----------------
 # 3) Set up git
@@ -42,6 +42,8 @@ HERE=`dirname $0`
 # (ex url: https://github.com/MattHalloran/NLN.git)
 PACKAGE_URL="https://github.com/MattHalloran/NLN.git"
 PACKAGE_NAME="NLN"
+# Must match config.py in backend src directory
+DB_USER="siteadmin"
 FLASK_ROUTE="src/routes.py"
 
 # Load functions to help with echo formatting
@@ -83,6 +85,7 @@ MSG="Installing pip3"
 checker sudo apt install -y python3-pip
 # 2) Install dependencies
 MSG="Installing pip3 requirements from requirements.txt"
+cd backend
 checker pip3 install -r requirements.txt
 
 # Task Queue Setup
@@ -110,25 +113,6 @@ checker sudo make install
 MSG="Download python redis dependencies"
 pip3 install redis rq
 
-# PostgreSQL Setup
-GROUP="PostgreSQL Setup"
-header
-# Download (on Mac use "brew install postgres" instead )
-MSG="Installing postgresql and postgresql-contrib"
-checker sudo apt-get install postgresql postgresql-contrib
-# Make sure postgres server is running
-# **NOTE: To start postgres on Mac, use "brew services start postgresql"
-service postgresql start
-# PostgreSQL comes with a postgres user. It is recommended to use a different user. So we will create a new one with the username and password in the config file
-# **NOTE: If postgres user was not created, enter "/usr/local/opt/postgres/bin/createuser -s postgres"
-sudo su postgress
-# On Mac, enter "psql -h localhost -d postgres"
-psql
-CREATE USER <USER_IN_CONFIG> WITH PASSWORD '<PASSWORD_IN_CONFIG>';
-ALTER USER <USER_IN_CONFIG> WITH SUPERUSER;
-\q
-exit
-
 # Environment Variables Setup
 # In a Mac terminal, you can enter  'env | grep SOME_STRING' to search for environment variables
 GROUP="Environment Variables Setup"
@@ -137,6 +121,8 @@ header
 # Currently, there are 7 environment variables which need to be set
 ENV_PATH = "/etc/environment"
 # Add the following to the file. Do not delete any of the existing lines
+read -p "Enter DB_PASSWORD: " DB_PASSWORD
+echo $DB_PASSWORD >> $ENV_PATH
 read -p "Enter NLN_SIGN_KEY: " NLN_SIGN_KEY
 echo $NLN_SIGN_KEY >> $ENV_PATH
 read -p "Enter TWILIO_ACCOUNT_SID: " TWILIO_ACCOUNT_SID
@@ -151,6 +137,22 @@ read -p "Enter AFA_EMAIL_PASSWORD: " AFA_EMAIL_PASSWORD
 echo $AFA_EMAIL_PASSWORD >> $ENV_PATH
 FLASK_APP=$FLASK_ROUTE
 
+# PostgreSQL Setup
+GROUP="PostgreSQL Setup"
+header
+# Download (on Mac use "brew install postgres" instead )
+MSG="Installing postgresql and postgresql-contrib"
+checker sudo apt-get install postgresql postgresql-contrib
+# Make sure postgres server is running
+# **NOTE: To start postgres on Mac, use "brew services start postgresql"
+service postgresql start
+# PostgreSQL comes with a postgres user. It is recommended to use a different user. So we will create a new one with the username and password in the config file
+# **NOTE: If postgres user was not created, enter "/usr/local/opt/postgres/bin/createuser -s postgres"
+sudo su postgress
+# On Mac, enter "psql -h localhost -d postgres"
+psql -c "CREATE USER $DB_USER WITH PASSWORD '$DB_PASSWORD';"
+psql -c "ALTER USER $DB_USER WITH SUPERUSER;"
+
 # 9) Create assets directories
 mkdir assets
 mkdir assets/gallery
@@ -158,19 +160,16 @@ mkdir assets/messaging
 mkdir assets/plant
 
 # 10) Setup database and populate with default data
-cd tools
+cd "/$PACKAGE_NAME/backend/tools"
 python3 dbTools.py
 
 # 11) Install npm
 sudo apt install nodejs
 sudo apt install npm
 
-# 12) Download frontend repository (ex: https://github.com/MattHalloran/NLN-frontend.git)
-cd
-git clone <repo-url>
 
 # 13) Install npm packages
-cd <repo-directory>
+cd "/$PACKAGE_NAME/frontend"
 npm install
 
 # Create frontend production build
