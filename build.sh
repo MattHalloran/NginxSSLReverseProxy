@@ -3,6 +3,8 @@
 # Last update: 2021-02-28
 # This scripts sets up an Ubuntu server to run a React frontend,
 # Python Flask backend repository from Github
+# --------- Environment Variables Setup ------------------
+# 1) User-entered values stored to environment file
 # --------- Unix Setup ------------------
 # 1) Update packages
 # --------- Git Setup ------------------
@@ -16,8 +18,6 @@
 # 1) Create redis directory
 # 2) Download redis release
 # 3) Install redis release
-# --------- Environment Variables Setup ------------------
-# 1) 
 # --------- PostgreSQL Setup ------------------
 # 1) 
 # --------- Backend setup -----------------
@@ -48,6 +48,30 @@ FLASK_ROUTE="src/routes.py"
 
 # Load functions to help with echo formatting
 source "$HERE/formatting.sh"
+
+# Environment Variables Setup
+# In a Mac terminal, you can enter  'env | grep SOME_STRING' to search for environment variables
+GROUP="Environment Variables Setup"
+INFO="You will need to paste in several variables"
+header
+# Currently, there are 7 environment variables which need to be set
+ENV_PATH = "/etc/environment"
+# Add the following to the file. Do not delete any of the existing lines
+read -p "Enter DB_PASSWORD: " DB_PASSWORD
+echo $DB_PASSWORD >> $ENV_PATH
+read -p "Enter NLN_SIGN_KEY: " NLN_SIGN_KEY
+echo $NLN_SIGN_KEY >> $ENV_PATH
+read -p "Enter TWILIO_ACCOUNT_SID: " TWILIO_ACCOUNT_SID
+echo $TWILIO_ACCOUNT_SID >> $ENV_PATH
+read -p "Enter TWILIO_AUTH_TOKEN: " TWILIO_AUTH_TOKEN
+echo $TWILIO_AUTH_TOKEN >> $ENV_PATH
+read -p "Enter AFA_EMAIL_USERNAME: " AFA_EMAIL_USERNAME
+echo $AFA_EMAIL_USERNAME >> $ENV_PATH
+read -p "Enter AFA_EMAIL_FROM: " AFA_EMAIL_FROM
+echo $AFA_EMAIL_FROM >> $ENV_PATH
+read -p "Enter AFA_EMAIL_PASSWORD: " AFA_EMAIL_PASSWORD
+echo $AFA_EMAIL_PASSWORD >> $ENV_PATH
+FLASK_APP=$FLASK_ROUTE
 
 # Unix Setup
 # 1) Clean up apt library
@@ -112,30 +136,6 @@ MSG="Allowing redis-server and redis-cli commands to be called from anywhere"
 checker sudo make install
 MSG="Download python redis dependencies"
 pip3 install redis rq
-
-# Environment Variables Setup
-# In a Mac terminal, you can enter  'env | grep SOME_STRING' to search for environment variables
-GROUP="Environment Variables Setup"
-INFO="You will need to paste in several variables"
-header
-# Currently, there are 7 environment variables which need to be set
-ENV_PATH = "/etc/environment"
-# Add the following to the file. Do not delete any of the existing lines
-read -p "Enter DB_PASSWORD: " DB_PASSWORD
-echo $DB_PASSWORD >> $ENV_PATH
-read -p "Enter NLN_SIGN_KEY: " NLN_SIGN_KEY
-echo $NLN_SIGN_KEY >> $ENV_PATH
-read -p "Enter TWILIO_ACCOUNT_SID: " TWILIO_ACCOUNT_SID
-echo $TWILIO_ACCOUNT_SID >> $ENV_PATH
-read -p "Enter TWILIO_AUTH_TOKEN: " TWILIO_AUTH_TOKEN
-echo $TWILIO_AUTH_TOKEN >> $ENV_PATH
-read -p "Enter AFA_EMAIL_USERNAME: " AFA_EMAIL_USERNAME
-echo $AFA_EMAIL_USERNAME >> $ENV_PATH
-read -p "Enter AFA_EMAIL_FROM: " AFA_EMAIL_FROM
-echo $AFA_EMAIL_FROM >> $ENV_PATH
-read -p "Enter AFA_EMAIL_PASSWORD: " AFA_EMAIL_PASSWORD
-echo $AFA_EMAIL_PASSWORD >> $ENV_PATH
-FLASK_APP=$FLASK_ROUTE
 
 # PostgreSQL Setup
 GROUP="PostgreSQL Setup"
