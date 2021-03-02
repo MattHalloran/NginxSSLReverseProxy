@@ -78,7 +78,7 @@ echo "AFA_EMAIL_PASSWORD=\"$AFA_EMAIL_PASSWORD\"" >> $ENV_PATH
 
 echo "All environment variables have been set. These will not go into effect until you log out and in"
 
-# Unix Setup
+# Unix Setup TODO setup firewall
 GROUP="Unix Setup"
 header
 # 1) Clean up apt library
@@ -192,6 +192,9 @@ mkdir assets/plant
 #cd
 #cd "$PACKAGE_NAME/backend/tools/"
 #python3 dbTools.py
+
+# Install Nginx (once installed, edit as shown in 14:46 https://www.youtube.com/watch?v=oykl1Ih9pMg)
+sudo apt install nginx
 
 # 11) Install npm
 sudo apt install nodejs

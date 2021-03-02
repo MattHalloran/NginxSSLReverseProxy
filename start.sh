@@ -40,7 +40,7 @@ header
 MSG="Activating python environment"
 cd
 cd "$PACKAGE_NAME/backend"
-chcker virtualenv site_env
+chcker source site_env/bin/activate
 MSG="Starting server using gunicorn"
 checker gunicorn -b :5000 src.routes:app &
 
@@ -50,4 +50,5 @@ header
 MSG="Serving production build"
 cd
 cd "$PACKAGE_NAME/frontend"
-checker serve -s build -l 3000 &
+# Port is 3000 if using nginx, 80 if not
+checker serve -s build -l 3000 --ssl-cert asdf --ssl-key fdas &

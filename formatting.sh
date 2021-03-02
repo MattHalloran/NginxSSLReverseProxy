@@ -12,6 +12,7 @@ header () {
 }
 
 # Wrapper function for printing "PASS" or "FAIL"
+# **NOTE: Do not use on any commands that write data to a file
 checker () {
     echo "$(tput setaf 7)$GROUP - $MSG..."
     if "$@"; then
