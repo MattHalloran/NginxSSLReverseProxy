@@ -50,5 +50,4 @@ header
 MSG="Serving production build"
 cd
 cd "$PACKAGE_NAME/frontend"
-# Port is 3000 if using nginx, 80 if not
-checker serve -s build -l 3000 --ssl-cert asdf --ssl-key fdas &
+checker pm2 serve build 3000 --spa

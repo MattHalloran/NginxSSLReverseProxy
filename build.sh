@@ -195,6 +195,23 @@ mkdir assets/plant
 
 # Install Nginx (once installed, edit as shown in 14:46 https://www.youtube.com/watch?v=oykl1Ih9pMg)
 sudo apt install nginx
+# Enable nginx so that it automatically starts if the server restarts
+sudo systemctl enable nginx
+# Set the nginx settings
+cp "$PACKAGE_NAME/nginxSettings.txt" /etc/nginx/sites-available/default
+# Restart nginx so it can use the new settings
+sudo service nginx restart
+
+# Enable firewall
+sudo ufw enable
+# Add nginx to firewall whitelist
+sudo ufw allow 'Nginx Full'
+
+# Give website SSL certificate
+sudo apt-add-repository -r ppa:certbot/certbot
+sudo apt-get update
+sudo apt-get install python3-certbot-nginx
+sudo certbot --nginx -d newlifenurseryinc.com -d www.newlifenurseryinc.com
 
 # 11) Install npm
 sudo apt install nodejs
@@ -210,7 +227,10 @@ npm audit fix
 
 # Create frontend production build
 npm run build
+# Install package to serve React
 sudo npm install -g serve
+# Install package to help server stay up
+sudo npm install -g pm2
 
 
 # 14) Update max listeners

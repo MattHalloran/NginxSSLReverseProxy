@@ -17,9 +17,9 @@ sudo snap install --classic Certbot
 sudo ln -s /snap/bin/certbot /usr/bin/certbot
 
 # Run certbox
-sudo certbot certonly --webroot
+sudo certbot certonly --nginx
 # When prompted, enter email address
-# When promted, enter domain name (ex: hellothere.com)
+# When promted, enter domain name (ex: hellothere.com, www.hellothere.com)
 # When prompted, enter webroot (frontend build directory path)
 
 # Test automatic renewal
