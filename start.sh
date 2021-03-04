@@ -42,7 +42,8 @@ cd
 cd "$PACKAGE_NAME/backend"
 chcker source site_env/bin/activate
 MSG="Starting server using gunicorn"
-checker gunicorn -b :5000 src.routes:app &
+# nohup ensures that the process continues to run when logged out
+checker nohup gunicorn --workers=2 -b :5000 src.routes:app &
 
 # Start React frontend
 GROUP="Start frontend"
