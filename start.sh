@@ -25,7 +25,13 @@ checker cd
 MSG="Navigating to redis build directory"
 checker cd redis/redis-6.0.10
 MSG="Starting redis server"
-checker src/redis-server
+checker nohup src/redis-server &
+
+# Start Task Worker
+cd
+cd "$PACKAGE_NAME/backend"
+source site_env/bin/activate
+nohup python worker.py &
 
 # Start PostgreSQL
 # **NOTE: To start postgres on Mac, use "brew services start postgresql"
