@@ -5,8 +5,8 @@
 # 1) Activate Python environment
 # 2) Start task queue
 # 3) Start database
-# 4) Start WSGI server
-# 5) Start frontend
+# 4) Start development backend server
+# 5) Start development frontend server
 
 HERE=`dirname $0`
 # Load functions to help with echo formatting
@@ -33,10 +33,10 @@ checker service postgresql start
 GROUP="Gunicorn"
 header
 MSG="Starting backend server using gunicorn"
-checker flask-start
+checker flask-start-dev
 
 # Start React frontend
 GROUP="Start frontend"
 header
 MSG="Serving production build"
-checker react-start
+checker react-start-dev
