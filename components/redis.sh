@@ -15,7 +15,7 @@ VERSION="https://download.redis.io/releases/redis-6.0.10.tar.gz"
 DIRECTORY="redis-6.0.10"
 UNINSTALL=false
 
-while getopts ":u" opt; do
+while getopts ":r" opt; do
     case ${opt} in
         r )
             UNINSTALL=true

@@ -13,7 +13,7 @@ source "$HERE/../formatting.sh"
 COMPONENT="Github and repository"
 UNINSTALL=false
 
-while getopts ":u" opt; do
+while getopts ":r" opt; do
     case ${opt} in
         r )
             UNINSTALL=true
