@@ -8,17 +8,28 @@
 
 ENV_PATH="/etc/environment"
 
-# Prevents an environment variable from being added multiple times
-addIfNeeded() {
-        grep -qxF "$1" $ENV_PATH || echo "$1" >> $ENV_PATH
+# Sets an environment variable. If variable already exists,
+# it is replaced with the new value
+# Params:
+#   1) The variable name
+#   2) The variable value
+setVar() {
+    # Remove existing matching lines
+    grep -vwE "$1" $ENV_PATH > $ENV_PATH
+    # Add new line
+    echo "$1=\"$2\"" >> $ENV_PATH
 }
 
 # Helper method for prompting environment variables
 prompt() {
     read -p "Enter $1: " VALUE
-    addIfNeeded "$1=\"$VALUE\""
+    setVar $1 $VALUE
 }
 
+# 1) Website variables
+echo "WEBSITE_NAME is the website's url, EXCEPT for the www."
+echo "Example: newlifenurseryinc.com"
+prompt "WEBSITE_NAME"
 # 1) Project variables
 echo "PACKAGE_ROOT is used to start the project."
 echo "Examples: ~, ~/Documents/Web\ Projects"

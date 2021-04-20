@@ -1,26 +1,19 @@
 #!/bin/bash
 
-# Installs an SSL certificate using the Let's Encrypt method
+# Last update: 2021-04-19
+# Gives website an auto-renewing SSL certificate, using Certbot
+# Prereqs:
+#   -Nginx must be set up
 
-# Install latest version of snapd
-sudo snap install core
-sudo snap refresh core
+HERE=`dirname $0`
+source "$HERE/formatting.sh"
 
-# Remove Certbot OS packages
-sudo apt-get remove certbox
-
-# Install Certbot
-sudo snap install --classic Certbot
-
-# Prepare the Certbot command
-# (ensure that it can be run)
-sudo ln -s /snap/bin/certbot /usr/bin/certbot
-
-# Run certbox
-sudo certbot certonly --nginx
-# When prompted, enter email address
-# When promted, enter domain name (ex: hellothere.com, www.hellothere.com)
-# When prompted, enter webroot (frontend build directory path)
-
-# Test automatic renewal
-sudo certbot renew --dry-run
+MSG="Installing Certbot"
+checker sudo apt-add-repository -r ppa:certbot/certbot
+MSG="Installing Nginx package for Certbot"
+sudo apt-get update
+checker sudo apt-get install python3-certbot-nginx
+MSG="Creating SSL certificate"
+checker sudo certbot --nginx -d $WEBSITE_NAME -d "www.$WEBSITE_NAME"
+MSG="Testing certificate auto-renewal"
+checker sudo certbot renew --dry-run
