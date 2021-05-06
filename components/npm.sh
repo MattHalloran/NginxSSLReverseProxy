@@ -37,6 +37,8 @@ install() {
     checker sudo apt install nodejs
     MSG="Installing NPM"
     checker sudo apt install npm
+    MSG="Globally installing knex, for migrations"
+    checker npm install -g knex
     MSG="Installing NPM packages"
     cd "$PACKAGE_ROOT/$PACKAGE_NAME/frontend/"
     checker npm install

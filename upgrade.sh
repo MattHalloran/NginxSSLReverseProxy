@@ -21,5 +21,9 @@ git clone $PACKAGE_URL
 # Move old assets
 mv $OLD_DIRECTORY/backend/assets $PACKAGE_NAME/backend
 
+# Migrate database
+#cd "$PACKAGE_ROOT/$PACKAGE_NAME/backend/"
+#npm run migrate-latest
+
 # Restart the website
 ./$HERE/start.sh

@@ -50,6 +50,8 @@ install() {
     checker sudo -u postgres psql -c "CREATE USER $DB_USER WITH PASSWORD '$DB_PASSWORD';"
     MSG="Giving user superuser permissions"
     checker sudo -u postgres psql -c "ALTER USER $DB_USER WITH SUPERUSER;"
+    MSG="Creating website's database"
+    checker sudo -u postgres psql -c "CREATE DATABASE $DB_NAME;"
 }
 
 if $UNINSTALL; then
