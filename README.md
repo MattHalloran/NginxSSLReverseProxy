@@ -1,26 +1,26 @@
-# Web Server Scripts - React/Flask
-Tired of keeping track of multiple development and production servers for your web project? Look no further. 
+# VPS Setup
+The goal of this repository is to make it easy to prepare a Virtual Private Server (VPS) to server one or more websites.
 
-This project contains bash scripts to ease the workflow for React/Flask applications. The scripts are well-documented, allowing one to easily modify the script to match their chosen frameworks.
+Heavily inspired by [this article](https://olex.biz/2019/09/hosting-with-docker-nginx-reverse-proxy-letsencrypt/).
 
-**Note**: This project was written for MacOS development and Ubuntu production environments. If you need to modify the scripts for different environments, feel free to submit a pull request😊
+## Development stack  
+* [Nginx](https://www.nginx.com/)
+* [Docker](https://www.docker.com/)
 
-## Installation
-1. git clone https://github.com/MattHalloran/WebServerScripts
-
-## Development stack:
-* Reverse proxy server - [Nginx](https://nginx.org/)
-* Frontend - [React](https://reactjs.org/) (JavaScript)
-* Frontend process manager - [PM2](https://pm2.keymetrics.io/)
-* Backend routing - [Flask](https://flask.palletsprojects.com/) (Python)
-* Backend asynchronous processes - [Redis Task Queue](https://python-rq.org/) (Python)
-* Database - [PostgreSQL](https://www.postgresql.org/)
-* Web server gateway interface (WSGI) server - [Gunicorn](https://www.gunicorn.org/)
-
-## Script descriptions:
-* <span>consts.sh</span> - Contains all custom variables, so other scripts can be run with minimal or node modifications
-* <span>dev-start.sh</span> - Starts all development servers
-* <span>certificate.sh</span> - Uses certbot to create a certificate for the production server
-* <span>build.sh</span> - Readies code for production deployment
-* <span>start.sh</span> - Starts all production servers
-* <span>formatting.sh</span> - Prettifies console logs
+## Getting started
+1. Pick a VPS provider, such as one of the following:
+    * [DigitalOcean](https://www.digitalocean.com/)
+    * [Vultr](https://www.vultr.com/)
+    * [Linode](https://www.linode.com/)
+2. Set up VPS ([example](https://www.youtube.com/watch?v=Dwlqa6NJdMo&t=142s))
+3. Connect to VPS, clone repository, and set up config files  
+    a. ssh -6 root@your.vps.ip.address  
+    b. git clone https://github.com/MattHalloran/WebServerScripts  
+    c. cd WebServerScripts  
+    d. *Edit .env-example, then rename it to .env*  
+    e. *Edit conf.d files as needed*
+    f. chmod +x ./scripts/*  
+    g. ./scripts/fullSetup.sh  
+    h. *Restart VPS and reconnect*  
+    i. cd WebServerScripts && docker-compose up  
+## 
