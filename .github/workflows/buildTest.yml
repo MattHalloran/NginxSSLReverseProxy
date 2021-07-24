@@ -29,5 +29,7 @@ jobs:
           chmod +x ./scripts/* && ./scripts/fullSetup.sh
           echo "Starting docker-compose"
           docker-compose up -d
+          echo "Waiting a bit to make sure the configuration file is generated"
+          sleep 30
           echo "Here is the generated Nginx configuration file"
           docker exec nginx-proxy cat /etc/nginx/conf.d/default
