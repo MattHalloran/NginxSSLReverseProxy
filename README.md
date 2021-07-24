@@ -3,7 +3,7 @@ The goal of this repository is to make it easy to prepare a Virtual Private Serv
 
 [Here](https://github.com/MattHalloran/NLN) is a project that uses this.
 
-Heavily inspired by [this article](https://olex.biz/2019/09/hosting-with-docker-nginx-reverse-proxy-letsencrypt/).
+Heavily inspired by [this article](https://olex.biz/2019/09/hosting-with-docker-nginx-reverse-proxy-letsencrypt/). If you're looking for someone to thank, it is them!
 
 ![Server Architecture - from https://olex.biz/2019/09/hosting-with-docker-nginx-reverse-proxy-letsencrypt/](/images/proxy-diagram.png)
 
@@ -14,25 +14,26 @@ Heavily inspired by [this article](https://olex.biz/2019/09/hosting-with-docker-
 | [Docker](https://www.docker.com/) | Container handler  |  latest  |
 
 ## Prerequisites
-1. Must have a website name name, with access to its DNS settings. If you're not sure where to get started, I like using [Google Domains](https://domains.google/)
+1. Must have a website name, with access to its DNS settings. If you're not sure where to get started, I like using [Google Domains](https://domains.google/).
 2. Must have access to a Virtual Private Server (VPS). They can be as little as $5 a month. Here are some good sites:
     * [DigitalOcean](https://m.do.co/c/eb48adcdd2cb) (Referral link)
     * [Vultr](https://www.vultr.com/)
     * [Linode](https://www.linode.com/)
 
 ## Getting started
-1. Pick a VPS provider, such as one of the following:
-    * [DigitalOcean](https://www.digitalocean.com/)
-    * [Vultr](https://www.vultr.com/)
-    * [Linode](https://www.linode.com/)
-2. Set up VPS ([example](https://www.youtube.com/watch?v=Dwlqa6NJdMo&t=142s))
-3. Connect to your VPS. I use an Ubuntu server with Docker pre-installed, but the setup script in this project can also set up Docker.
-    `ssh -6 root@youp.vps.ip.address`
-4. Clone repository  
+1. Set up VPS ([example](https://www.youtube.com/watch?v=Dwlqa6NJdMo&t=142s)).
+2. Edit DNS settings to point to the VPS. Here is an example:  
+   | Host Name  | Type  |  TTL  |  Data  |
+   |---|---|---|---|
+   | `examplesite.com`  | A  |  1 hour | `your.vps.ip.address` |
+   | `www.examplesite.com` | A  |  1 hour  | `your.vps.ip.address` |
+3. Connect to your VPS. I use an Ubuntu server with Docker pre-installed, but the script in this repo can also set up Docker:
+    `ssh -6 root@your.vps.ip.address`
+4. Clone repository:  
     `git clone https://github.com/MattHalloran/NginxSSLReverseProxy && cd NginxSSLReverseProxy`
-5. Run setup script  
+5. Run setup script:  
     `chmod +x ./scripts/fullSetup.sh && ./scripts/fullSetup.sh`
-6. Start docker  
+6. Start docker:  
     `sudo docker-compose up -d`
 
 
