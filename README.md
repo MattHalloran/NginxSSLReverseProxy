@@ -39,4 +39,4 @@ Heavily inspired by [this article](https://olex.biz/2019/09/hosting-with-docker-
 
 ## Common commands
 - Find docker container IDS: `docker ps -a`
-- Check nginx configuration file (auto-generated): `docker exec <nginx-proxy-containier_id> cat /etc/nginx/conf.d/default`
+- Check nginx configuration file (auto-generated): `docker exec <nginx-proxy-containier_id> cat /etc/nginx/conf.d/default.conf`
