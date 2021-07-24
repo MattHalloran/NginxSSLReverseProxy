@@ -1,6 +1,8 @@
 # Nginx/LetsEncrypt Reverse Proxy
 The goal of this repository is to make it easy to prepare a Virtual Private Server (VPS) to server one or more websites.
 
+[Here](https://github.com/MattHalloran/NLN) is a project that uses this.
+
 Heavily inspired by [this article](https://olex.biz/2019/09/hosting-with-docker-nginx-reverse-proxy-letsencrypt/).
 
 ![Server Architecture - from https://olex.biz/2019/09/hosting-with-docker-nginx-reverse-proxy-letsencrypt/](/images/proxy-diagram.png)
@@ -27,7 +29,7 @@ Heavily inspired by [this article](https://olex.biz/2019/09/hosting-with-docker-
 3. Connect to your VPS. I use an Ubuntu server with Docker pre-installed, but the setup script in this project can also set up Docker.
     `ssh -6 root@youp.vps.ip.address`
 4. Clone repository  
-    `git clone https://github.com/MattHalloran/WebServerScripts && cd WebServerScripts`
+    `git clone https://github.com/MattHalloran/NginxSSLReverseProxy && cd NginxSSLReverseProxy`
 5. Run setup script  
     `chmod +x ./scripts/fullSetup.sh && ./scripts/fullSetup.sh`
 6. Start docker  
