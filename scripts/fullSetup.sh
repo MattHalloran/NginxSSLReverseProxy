@@ -2,7 +2,7 @@
 # Fully sets up server
 HERE=`dirname $0`
 source "${HERE}/../.env"
-source "${HERE}/formatting.sh"
+source "${HERE}/prettify.sh"
 
 # ========================================================
 # General Ubuntu setup
@@ -75,19 +75,23 @@ sudo docker network create nginx-proxy
 # --------------------------------------------------------
 # Nginx
 # --------------------------------------------------------
-header "Installing Nginx"
-sudo apt install nginx
-
-header "Starting Nginx"
-sudo systemctl start nginx
+info "Nginx will be inside a docker instance"
+header "Purging any existing Nginx configurations"	
+sudo apt-get purge nginx nginx-common	
 
 
 # ========================================================
 # Setting up firewall
 # ========================================================
+info "Since Nginx is inside docker, we must handle the firewall settings ourselves"
 header "Setting up firewall"
 # Enable firewall
 sudo ufw enable -y
-# Only allow 80 and 443
-sudo ufw allow 'Nginx Full'
+# Disable all connections
+sudo ufw default allow outgoing
+sudo ufw default deny incoming
+# Only allow 80 and 443 (80 is required for certificates)
+sudo ufw allow 80/tcp
+sudo ufw allow ssh
+
 sudo sysctl -p
