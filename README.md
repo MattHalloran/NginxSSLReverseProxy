@@ -1,5 +1,5 @@
 # Nginx/LetsEncrypt Reverse Proxy
-The goal of this repository is to make it easy to prepare a Virtual Private Server (VPS) to server one or more websites.
+The goal of this repository is to make it easy to [reverse proxy](https://en.wikipedia.org/wiki/Reverse_proxy) one or more website services on a Virtual Private Server (VPS). **Note: Services must be started with Docker.**
 
 [Here](https://github.com/MattHalloran/NLN) is a project that uses this.
 
@@ -19,6 +19,11 @@ Heavily inspired by [this article](https://olex.biz/2019/09/hosting-with-docker-
     * [DigitalOcean](https://m.do.co/c/eb48adcdd2cb) (Referral link)
     * [Vultr](https://www.vultr.com/)
     * [Linode](https://www.linode.com/)
+3. Must have Dockerfiles or docker-compose files to start your website's services. Each service that interfaces with Nginx (i.e. is connected to with a port) can be configured with the following environment variables:  
+    - *VIRTUAL_HOST* - the website's name, without 'www' (ex: `examplesite.com`)
+    - *VIRTUAL_PORT* - the container's port
+    - *LETSENCRYPT_HOST* - website name used by LetsEncrypt. Most likely the same as *VIRTUAL_HOST*
+    - *LETSENCRYPT_EMAIL* - the email address to be associated with the LetsEncrypt process
 
 ## Getting started
 1. Set up VPS ([example](https://www.youtube.com/watch?v=Dwlqa6NJdMo&t=142s)).
