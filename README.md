@@ -20,7 +20,7 @@ Heavily inspired by [this article](https://olex.biz/2019/09/hosting-with-docker-
     * [Vultr](https://www.vultr.com/)
     * [Linode](https://www.linode.com/)
 3. Must have Dockerfiles or docker-compose files to start your website's services. Each service that interfaces with Nginx (i.e. is connected to with a port) can be configured with the following environment variables:  
-    - *VIRTUAL_HOST* - the website's name, without 'www' (ex: `examplesite.com`)
+    - *VIRTUAL_HOST* - the website's name(s), separated by a comma with no spaces (e.g. `examplesite.com,www.examplesite.com`)
     - *VIRTUAL_PORT* - the container's port
     - *LETSENCRYPT_HOST* - website name used by LetsEncrypt. Most likely the same as *VIRTUAL_HOST*
     - *LETSENCRYPT_EMAIL* - the email address to be associated with the LetsEncrypt process
