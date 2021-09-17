@@ -3,7 +3,7 @@ version: '2'
 services:
 
   nginx-proxy:
-    image: jwilder/nginx-proxy
+    image: jwilder/nginx-proxy:dev
     container_name: nginx-proxy
     ports:
       - "80:80"
@@ -11,7 +11,7 @@ services:
     networks:
       - proxy
     volumes:
-      - conf:/etc/nginx/conf.d
+      - ./my_proxy.conf:/etc/nginx/conf.d/my_proxy.conf:ro
       - vhost:/etc/nginx/vhost.d
       - html:/usr/share/nginx/html
       - dhparam:/etc/nginx/dhparam

@@ -45,3 +45,9 @@ Heavily inspired by [this article](https://olex.biz/2019/09/hosting-with-docker-
 ## Common commands
 - Find docker container IDS: `docker ps -a`
 - Check nginx configuration file (auto-generated): `docker exec <nginx-proxy-containier_id> cat /etc/nginx/conf.d/default.conf`
+
+
+## Custom proxy
+Custom proxy configurations can be put in the `my_proxy.conf` file. By default, this only contains one line: `client_max_body_size 100m;`. This raises the maximum payload size for uploading files. This is useful if you'd like users to have the ability to upload multiple images in one request, for example.
+
+If you are not using custom configurations, you can change the docker-compose line `- ./my_proxy.conf:/etc/nginx/conf.d/my_proxy.conf:ro` to `- conf:/etc/nginx/conf.d`.
