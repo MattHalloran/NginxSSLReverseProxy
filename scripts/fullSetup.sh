@@ -86,7 +86,7 @@ sudo apt-get purge nginx nginx-common
 info "Since Nginx is inside docker, we must handle the firewall settings ourselves"
 header "Setting up firewall"
 # Enable firewall
-sudo ufw enable -y
+sudo ufw enable
 # Disable all connections
 sudo ufw default allow outgoing
 sudo ufw default deny incoming
