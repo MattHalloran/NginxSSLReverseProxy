@@ -11,6 +11,7 @@ services:
     networks:
       - proxy
     volumes:
+      - conf:/etc/nginx/conf.d
       - ./my_proxy.conf:/etc/nginx/conf.d/my_proxy.conf:ro
       - vhost:/etc/nginx/vhost.d
       - html:/usr/share/nginx/html
