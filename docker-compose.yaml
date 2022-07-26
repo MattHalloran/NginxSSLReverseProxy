@@ -13,6 +13,7 @@ services:
     volumes:
       - conf:/etc/nginx/conf.d
       - ./my_proxy.conf:/etc/nginx/conf.d/my_proxy.conf:ro
+      - ./503:/usr/share/nginx/html/503:ro
       - vhost:/etc/nginx/vhost.d
       - html:/usr/share/nginx/html
       - dhparam:/etc/nginx/dhparam
