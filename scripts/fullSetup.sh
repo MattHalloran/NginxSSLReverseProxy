@@ -51,7 +51,7 @@ echo \
 header "Installing Docker Engine"
 sudo apt-get install docker-ce docker-ce-cli containerd.io
 
-header "Verify that Docker Engine is running successfully. Container will automatically close"
+header "Verifing that Docker Engine is running successfully. Container will automatically close"
 sudo docker run hello-world
 
 header "Creating docker user group, so docker can be run without sudo"
