@@ -1,7 +1,6 @@
 #!/bin/bash
 # Fully sets up server
 HERE=`dirname $0`
-source "${HERE}/../.env"
 source "${HERE}/prettify.sh"
 
 # ========================================================
