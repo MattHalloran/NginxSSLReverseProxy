@@ -1,7 +1,5 @@
-# Nginx/LetsEncrypt Reverse Proxy
-The goal of this repository is to make it easy to [reverse proxy](https://en.wikipedia.org/wiki/Reverse_proxy) one or more website services on a Virtual Private Server (VPS). **Note: Services must be started with Docker.**
-
-[Here](https://github.com/MattHalloran/NLN) is a project that uses this.
+# Nginx Reverse Proxy with SSL Certificate
+The goal of this repository is to make it easy to set up a [reverse proxy](https://en.wikipedia.org/wiki/Reverse_proxy) and [SSL certificate](https://www.cloudflare.com/learning/ssl/what-is-an-ssl-certificate/) for a website running locally or on a VPS. When running locally, the SSL certificate is self-signed. When running on a VPS, the SSL certificate is provided by [LetsEncrypt](https://letsencrypt.org/).
 
 Heavily inspired by [this article](https://olex.biz/2019/09/hosting-with-docker-nginx-reverse-proxy-letsencrypt/). If you're looking for someone to thank, it is them!
 
@@ -14,18 +12,28 @@ Heavily inspired by [this article](https://olex.biz/2019/09/hosting-with-docker-
 | [Docker](https://www.docker.com/) | Container handler  |  latest  |
 
 ## Prerequisites
-1. Must have a website name, with access to its DNS settings. If you're not sure where to get started, I like using [Google Domains](https://domains.google/).
-2. Must have access to a Virtual Private Server (VPS). They can be as little as $5 a month. Here are some good sites:
+1. If not running locally, must have a website name and access to its DNS settings
+2. If not running locally, must have access to a Virtual Private Server (VPS). Here are some good sites:
     * [DigitalOcean](https://m.do.co/c/eb48adcdd2cb) (Referral link)
     * [Vultr](https://www.vultr.com/)
     * [Linode](https://www.linode.com/)
-3. Must have Dockerfiles or docker-compose files to start your website's services. Each service that interfaces with Nginx (i.e. is connected to with a port) can be configured with the following environment variables:  
+3. Must have Dockerfiles or docker-compose files to start your website's services. Each service that interfaces with Nginx (i.e. is connected to with a port) can be configured using the following environment variables:  
     - *VIRTUAL_HOST* - the website's name(s), separated by a comma with no spaces (e.g. `examplesite.com,www.examplesite.com`)
     - *VIRTUAL_PORT* - the container's port
     - *LETSENCRYPT_HOST* - website name used by LetsEncrypt. Most likely the same as *VIRTUAL_HOST*
     - *LETSENCRYPT_EMAIL* - the email address to be associated with the LetsEncrypt process
 
 ## Getting started
+
+### Running locally
+1. Clone repository:  
+    `git clone https://github.com/MattHalloran/NginxSSLReverseProxy && cd NginxSSLReverseProxy`
+2. Run setup script:  
+    `chmod +x ./scripts/fullSetup.sh && ./scripts/fullSetup.sh`
+3. Start docker:  
+    a. `sudo docker-compose-local.yml up -d` (note which `.yml` file we're using)
+
+### Running on a VPS
 1. Set up VPS ([example](https://www.youtube.com/watch?v=Dwlqa6NJdMo&t=142s)).
 2. Edit DNS settings to point to the VPS. Here is an example:  
    | Host Name  | Type  |  TTL  |  Data  |
@@ -39,7 +47,7 @@ Heavily inspired by [this article](https://olex.biz/2019/09/hosting-with-docker-
 5. Run setup script:  
     `chmod +x ./scripts/fullSetup.sh && ./scripts/fullSetup.sh`
 6. Start docker:  
-    `sudo docker-compose up -d`
+    a. `sudo docker-compose up -d` (note which `.yml` file we're using)
 
 
 ## Common commands
