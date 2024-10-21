@@ -1,0 +1,2 @@
+# Ignore mkcert generated files (certificates and keys)
+localhost+*.pem
