@@ -1,7 +1,6 @@
 #!/bin/bash
 # Fully sets up server
 HERE=`dirname $0`
-source "${HERE}/prettify.sh"
 
 # ========================================================
 # General Ubuntu setup
@@ -94,3 +93,4 @@ sudo ufw allow 80/tcp
 sudo ufw allow ssh
 
 sudo sysctl -p
+source "${HERE}/utils.sh"
