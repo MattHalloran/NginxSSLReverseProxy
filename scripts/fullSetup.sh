@@ -56,7 +56,6 @@ setup_ubuntu() {
 setup_docker() {
     header "Installing Docker prerequisites"
     if ! command -v docker >/dev/null 2>&1; then
-        sudo apt-get remove -y docker docker-engine docker.io containerd runc
         sudo apt-get install -y apt-transport-https ca-certificates curl gnupg lsb-release
 
         header "Adding Docker’s official GPG key"
@@ -65,6 +64,8 @@ setup_docker() {
         echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list >/dev/null
         sudo apt-get update
         sudo apt-get install -y docker-ce docker-ce-cli containerd.io
+    else
+        info "Detected Docker version: $(docker --version)"
     fi
 
     header "Verifying Docker Engine"
