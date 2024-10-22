@@ -36,8 +36,21 @@ setup_ubuntu() {
     handle_apt_errors sudo apt-get -y upgrade
 
     info "Updating max listeners, since npm uses a lot. Not sure exactly what they do, but the default max amount is not enough"
-    echo fs.inotify.max_user_watches=20000 | sudo tee -a /etc/sysctl.conf
-    echo vm.overcommit_memory=1 | sudo tee -a /etc/sysctl.conf
+    # Remove any duplicates of fs.inotify.max_user_watches and vm.overcommit_memory
+    sudo sed -i '/^fs.inotify.max_user_watches=.*$/d' /etc/sysctl.conf
+    sudo sed -i '/^vm.overcommit_memory=.*$/d' /etc/sysctl.conf
+    # Add fs.inotify.max_user_watches if not present
+    if ! grep -q "^fs.inotify.max_user_watches=20000$" /etc/sysctl.conf; then
+        echo "fs.inotify.max_user_watches=20000" | sudo tee -a /etc/sysctl.conf
+    else
+        info "fs.inotify.max_user_watches is already set"
+    fi
+    # Add vm.overcommit_memory if not present
+    if ! grep -q "^vm.overcommit_memory=1$" /etc/sysctl.conf; then
+        echo "vm.overcommit_memory=1" | sudo tee -a /etc/sysctl.conf
+    else
+        info "vm.overcommit_memory is already set"
+    fi
 }
 
 setup_docker() {
