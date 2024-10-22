@@ -31,7 +31,7 @@ Heavily inspired by [this article](https://olex.biz/2019/09/hosting-with-docker-
 2. Run setup script:  
     `chmod +x ./scripts/fullSetup.sh && ./scripts/fullSetup.sh`
 3. Start docker:  
-    a. `sudo docker-compose-local.yml up -d` (note which `.yml` file we're using)
+    a. `sudo docker-compose -f docker-compose.local.yml up -d`
 
 ### Running on a VPS
 1. Set up VPS ([example](https://www.youtube.com/watch?v=Dwlqa6NJdMo&t=142s)).
@@ -47,7 +47,7 @@ Heavily inspired by [this article](https://olex.biz/2019/09/hosting-with-docker-
 5. Run setup script:  
     `chmod +x ./scripts/fullSetup.sh && ./scripts/fullSetup.sh`
 6. Start docker:  
-    a. `sudo docker-compose up -d` (note which `.yml` file we're using)
+    a. `sudo docker-compose -f docker-compose.remote.yml up -d`
 
 
 ## Common commands
@@ -56,6 +56,8 @@ Heavily inspired by [this article](https://olex.biz/2019/09/hosting-with-docker-
 
 
 ## Custom proxy
-Custom proxy configurations can be put in the `my_proxy.conf` file. By default, this only contains one line: `client_max_body_size 100m;`. This raises the maximum payload size for uploading files. This is useful if you'd like users to have the ability to upload multiple images in one request, for example.
+Custom proxy configurations can be put in the `nginx/conf.d/local.conf` or `nginx/conf.d/remote.conf` file, depending on if this will be running locally or remotely. 
+
+By default, the local version contains the standard configuration for self-signed SSL setup. Both versions also contain `client_max_body_size 100m;`. This raises the maximum payload size for uploading files. This is useful if you'd like users to have the ability to upload multiple images in one request, for example.
 
 If you are not using custom configurations, you can remove the docker-compose line `- ./my_proxy.conf:/etc/nginx/conf.d/my_proxy.conf:ro`.

@@ -7,18 +7,6 @@ set -o pipefail # Exit if piped command (e.g. curl, apt-get) fails
 HERE=$(dirname $0)
 source "${HERE}/utils.sh"
 
-local_dev=false
-while [[ "$#" -gt 0 ]]; do
-    case $1 in
-    --local) local_dev=true ;;
-    *)
-        echo "Unknown parameter passed: $1"
-        exit 1
-        ;;
-    esac
-    shift
-done
-
 check_root_privileges() {
     if [[ $EUID -ne 0 ]]; then
         echo "This script must be run as root or with sudo privileges"
@@ -54,22 +42,22 @@ setup_ubuntu() {
 
 setup_docker() {
     header "Installing Docker prerequisites"
-    if ! command -v docker > /dev/null 2>&1; then
+    if ! command -v docker >/dev/null 2>&1; then
         sudo apt-get remove -y docker docker-engine docker.io containerd runc
         sudo apt-get install -y apt-transport-https ca-certificates curl gnupg lsb-release
 
         header "Adding Docker’s official GPG key"
         curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 
-        echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+        echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list >/dev/null
         sudo apt-get update
         sudo apt-get install -y docker-ce docker-ce-cli containerd.io
     fi
 
     header "Verifying Docker Engine"
-    sudo docker run hello-world || true  # Non-blocking
+    sudo docker run hello-world || true # Non-blocking
 
-    if ! getent group docker > /dev/null; then
+    if ! getent group docker >/dev/null; then
         sudo groupadd docker
         sudo usermod -aG docker $USER
     fi
@@ -78,7 +66,7 @@ setup_docker() {
     sudo systemctl enable docker.service
     sudo systemctl enable containerd.service
 
-    if ! command -v docker-compose > /dev/null; then
+    if ! command -v docker-compose >/dev/null; then
         header "Installing Docker Compose"
         sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
         sudo chmod +x /usr/local/bin/docker-compose
@@ -91,7 +79,7 @@ setup_docker() {
 }
 
 setup_self_cert() {
-    if ! command -v mkcert > /dev/null; then
+    if ! command -v mkcert >/dev/null; then
         header "Installing mkcert for local SSL development certificates"
         sudo apt-get install -y libnss3-tools
         curl -L "https://github.com/FiloSottile/mkcert/releases/download/v1.4.4/mkcert-v1.4.4-linux-amd64" -o mkcert
@@ -101,12 +89,19 @@ setup_self_cert() {
     fi
 
     header "Generating SSL certificates for localhost"
-    if [ ! -f "localhost+2.pem" ]; then
+    local CERT_DIR="${HERE}/../certs"
+    mkdir -p "${CERT_DIR}"
+    if [ ! -f "${CERT_DIR}/localhost+2.pem" ]; then
+        cd "${CERT_DIR}"
         mkcert localhost 127.0.0.1 ::1
-        info "Certificates generated at: $(pwd)"
+        info "Certificates generated at: ${CERT_DIR}"
+        cd -
     else
         info "Existing SSL certificates found. Skipping regeneration."
     fi
+
+    # Ensure the certificates are readable
+    chmod 644 "${CERT_DIR}/localhost+2.pem"
 }
 
 purge_nginx() {
@@ -141,11 +136,33 @@ setup_firewall() {
     sudo sysctl -p
 }
 
+SERVER_LOCATION="local" # Default to local
 main() {
+    while [[ $# -gt 0 ]]; do
+        key="$1"
+        case $key in
+        -l | --location)
+            if [ -z "$2" ] || [[ "$2" == -* ]]; then
+                echo "Error: Option $key requires an argument."
+                exit 1
+            fi
+            SERVER_LOCATION="${2}"
+            shift # past argument
+            shift # past value
+            ;;
+        -h | --help)
+            echo "Usage: $0 [-l SERVER_LOCATION] [-h]"
+            echo "  -l --location: Server location (e.g. \"local\", \"remote\")"
+            echo "  -h --help: Show this help message"
+            exit 0
+            ;;
+        esac
+    done
+
     check_root_privileges
     setup_ubuntu
     setup_docker
-    if [ "$local_dev" = true ]; then
+    if [ "$SERVER_LOCATION" == "local" ]; then
         setup_self_cert
     fi
     purge_nginx
