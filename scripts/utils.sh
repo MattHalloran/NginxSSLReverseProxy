@@ -1,4 +1,6 @@
 #!/bin/bash
+# WARNING: This is used by some shell scripts, so be careful not to use any
+# Bash-specific features outside of functions.
 
 # Exit codes
 E_NO_TPUT=1
@@ -44,12 +46,15 @@ initialize_reset() {
 
 # Echo colored text
 echo_color() {
-    local color="$1"
-    local message="$2"
+    color="$1"
+    message="$2"
 
     initialize_color "$color"
     initialize_reset
-    echo "${!color}${message}${RESET}"
+
+    eval "color_value=\$$color"
+
+    printf '%s%s%s\n' "$color_value" "$message" "$RESET"
 }
 
 # Print header message
@@ -109,4 +114,31 @@ run_if_executed() {
     if [[ "${BASH_SOURCE[1]}" == "${0}" ]]; then
         "$callback" "$@"
     fi
+}
+
+load_env_file() {
+    HERE=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+
+    local environment=$1
+    local env_file="$HERE/../.env"
+
+    if [ "$environment" != "development" ] && [ "$environment" != "production" ]; then
+        error "Error: Environment must be either development or production."
+        exit 1
+    fi
+
+    if [ "$environment" = "production" ]; then
+        env_file="$HERE/../.env.prod"
+    fi
+
+    if [ ! -f "$env_file" ]; then
+        error "Error: Environment file $env_file does not exist."
+        exit 1
+    fi
+
+    . "$env_file"
+}
+
+is_running_in_ci() {
+    [[ "$CI" == "true" ]]
 }

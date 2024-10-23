@@ -9,8 +9,12 @@ source "${HERE}/utils.sh"
 
 check_root_privileges() {
     if [[ $EUID -ne 0 ]]; then
-        echo "This script must be run as root or with sudo privileges"
-        exit 1
+        if is_running_in_ci; then
+            warning "Running in CI environment without root privileges."
+        else
+            error "This script must be run as root or with sudo privileges"
+            exit 1
+        fi
     fi
 }
 
@@ -23,6 +27,11 @@ handle_apt_errors() {
 }
 
 setup_ubuntu() {
+    if is_running_in_ci; then
+        warning "Skipping Ubuntu setup in CI environment."
+        return
+    fi
+
     header "Cleaning up apt library"
     sudo rm -rvf /var/lib/apt/lists/*
 
@@ -141,6 +150,11 @@ purge_nginx() {
 }
 
 setup_firewall() {
+    if is_running_in_ci; then
+        warning "Skipping Ubuntu setup in CI environment."
+        return
+    fi
+
     info "Since Nginx is inside docker, we must handle the firewall settings ourselves"
     header "Setting up firewall"
     # Enable firewall
