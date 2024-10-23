@@ -40,8 +40,8 @@ setup_ubuntu() {
     sudo sed -i '/^fs.inotify.max_user_watches=.*$/d' /etc/sysctl.conf
     sudo sed -i '/^vm.overcommit_memory=.*$/d' /etc/sysctl.conf
     # Add fs.inotify.max_user_watches if not present
-    if ! grep -q "^fs.inotify.max_user_watches=20000$" /etc/sysctl.conf; then
-        echo "fs.inotify.max_user_watches=20000" | sudo tee -a /etc/sysctl.conf
+    if ! grep -q "^fs.inotify.max_user_watches=30000$" /etc/sysctl.conf; then
+        echo "fs.inotify.max_user_watches=30000" | sudo tee -a /etc/sysctl.conf
     else
         info "fs.inotify.max_user_watches is already set"
     fi
@@ -70,6 +70,10 @@ setup_docker() {
 
     header "Verifying Docker Engine"
     sudo docker run hello-world || true # Non-blocking
+    # Remove the "hello-world" container to avoid clutter
+    if sudo docker ps -a --filter "ancestor=hello-world" --format "{{.ID}}" | grep -q .; then
+        sudo docker rm $(sudo docker ps -a --filter "ancestor=hello-world" --format "{{.ID}}")
+    fi
 
     if ! getent group docker >/dev/null; then
         sudo groupadd docker
