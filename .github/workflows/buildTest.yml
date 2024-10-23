@@ -20,14 +20,34 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       # runs setup script and docker-compose. Outputs Nginx settings
-      - name: Run a multi-line script
+      - name: Run setup script and start local services
+        env:
+          SERVER_LOCATION: local
         run: |
-          echo "Running setup script"
-          chmod +x ./scripts/* && ./scripts/fullSetup.sh
-          echo "Starting docker-compose"
-          docker-compose up -d
-          echo "Here is the generated Nginx configuration file"
-          docker exec nginx-proxy cat /etc/nginx/conf.d/default.conf
+          echo "Running setup script for local environment"
+          chmod +x ./scripts/*
+
+          set -o pipefail
+          sudo ./scripts/fullSetup.sh -l $SERVER_LOCATION
+
+          echo "Starting local docker-compose"
+          sudo docker-compose -f docker-compose-local.yml up -d
+
+          echo "Waiting for services to be ready"
+          sleep 10
+
+          echo "Here is the generated Nginx configuration file for local setup"
+          sudo docker exec nginx-local-dev cat /etc/nginx/conf.d/local.conf
+
+          echo "Testing Nginx is serving content on port 80 (HTTP)"
+          curl -I http://localhost
+
+          echo "Testing Nginx is serving content on port 443 (HTTPS)"
+          # Use --insecure to allow self-signed certificates
+          curl -I --insecure https://localhost
+
+          echo "Stopping local docker-compose"
+          sudo docker-compose -f docker-compose-local.yml down
